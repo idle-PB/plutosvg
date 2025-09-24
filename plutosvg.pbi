@@ -2,7 +2,8 @@
 ; Author idle 
 ; Ported from plutosvg.h
 ; Copyright (c) 2020-2025 Samuel Ugochukwu <sammycageagle@gmail.com>
-; 
+; https://github.com/sammycage/plutosvg
+;
 ; Permission is hereby granted, free of charge, to any person obtaining a copy
 ; of this software and associated documentation files (the "Software"), to deal
 ; in the Software without restriction, including without limitation the rights
@@ -489,21 +490,21 @@ CompilerIf #PB_Compiler_IsMainFile
   
   Procedure Smile() 
     
-    width = 150;
-    height = 150;
+    Protected width = 150;
+    Protected height = 150;
     
-    center_x.f = width / 2.0
-    center_y.f = height / 2.0
-    face_radius.f = 70
-    mouth_radius.f = 50
-    eye_radius.f = 10
-    eye_offset_x.f = 25
-    eye_offset_y.f = 20
-    eye_x.f = center_x - eye_offset_x
-    eye_y.f = center_y - eye_offset_y
+    Protected center_x.f = width / 2.0
+    Protected center_y.f = height / 2.0
+    Protected face_radius.f = 70
+    Protected mouth_radius.f = 50
+    Protected eye_radius.f = 10
+    Protected eye_offset_x.f = 25
+    Protected eye_offset_y.f = 20
+    Protected eye_x.f = center_x - eye_offset_x
+    Protected eye_y.f = center_y - eye_offset_y
     
-    surface = plutovg_surface_create(width, height)
-    canvas = plutovg_canvas_create(surface)
+    Protected surface = plutovg_surface_create(width, height)
+    Protected canvas = plutovg_canvas_create(surface)
     
     plutovg_canvas_save(canvas);
     plutovg_canvas_arc(canvas, center_x, center_y, face_radius, 0, #PLUTOVG_TWO_PI, 0)
@@ -528,8 +529,8 @@ CompilerIf #PB_Compiler_IsMainFile
     plutovg_canvas_stroke(canvas)
     plutovg_canvas_restore(canvas)
     
-    font.s = "C:\Windows\fonts\Arial.ttf"
-    Protected text.s  = "Smile PB" 
+    Protected font.s = "C:\Windows\fonts\Arial.ttf"
+    Protected text.s = "Smile PB" 
     
     If plutovg_canvas_add_font_file(canvas, "Arial",1,0,font,0)
       Debug "ok" 
@@ -546,7 +547,10 @@ CompilerIf #PB_Compiler_IsMainFile
       
     EndIf   
     
-    img = plutovg_surface_write_to_img(surface,#PB_Any) 
+    Protected sufdata.s = PeekS(plutovg_surface_get_data(surface),-1,#PB_Unicode)  
+    Debug sufdata 
+    
+    Protected img = plutovg_surface_write_to_img(surface,#PB_Any) 
     If img 
       OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"test") 
       ImageGadget(0,0,0,ImageWidth(img),ImageHeight(img),ImageID(img)) 
@@ -597,8 +601,8 @@ CompilerIf #PB_Compiler_IsMainFile
   Debug "PlutoSVG Version: " + PeekS(plutosvg_version_string(),-1,#PB_UTF8) 
   Debug "Version Code: " + Str(plutosvg_version())
   
-  Global svg.s = GetPathPart(ProgramFilename()) + "camera.svg" 
-  Global topng.s = GetPathPart(ProgramFilename()) + "mycamera.png"
+  Global svg.s = GetPathPart(ProgramFilename()) + "tiger.svg" 
+  Global topng.s = GetPathPart(ProgramFilename()) + "tiger.png"
   
   smile() ;draw smile to image and open window
     
