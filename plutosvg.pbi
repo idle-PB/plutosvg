@@ -552,7 +552,7 @@ CompilerIf #PB_Compiler_IsMainFile
     
     Protected img = plutovg_surface_write_to_img(surface,#PB_Any) 
     If img 
-      OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"test") 
+      OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"vector test",#PB_Window_SystemMenu | #PB_Window_ScreenCentered) 
       ImageGadget(0,0,0,ImageWidth(img),ImageHeight(img),ImageID(img)) 
       Repeat 
       Until WaitWindowEvent() = #PB_Event_CloseWindow 
@@ -579,7 +579,7 @@ CompilerIf #PB_Compiler_IsMainFile
         
         img = plutovg_surface_write_to_img(surface,#PB_Any) 
         If img 
-          OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"test") 
+          OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"SVG to img",#PB_Window_SystemMenu | #PB_Window_ScreenCentered) 
           ImageGadget(0,0,0,ImageWidth(img),ImageHeight(img),ImageID(img)) 
           Repeat 
           Until WaitWindowEvent() = #PB_Event_CloseWindow 
@@ -610,7 +610,7 @@ CompilerIf #PB_Compiler_IsMainFile
     
     cam = LoadImage(-1,topng)
     If cam  
-      OpenWindow(0,0,0,ImageWidth(cam),ImageHeight(cam),"test") 
+      OpenWindow(0,0,0,ImageWidth(cam),ImageHeight(cam),"SVG to PNG",#PB_Window_SystemMenu | #PB_Window_ScreenCentered) 
       ImageGadget(0,0,0,ImageWidth(cam),ImageHeight(cam),ImageID(cam)) 
       Repeat 
       Until WaitWindowEvent() = #PB_Event_CloseWindow 
