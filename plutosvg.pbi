@@ -486,8 +486,63 @@ CompilerIf #PB_Compiler_OS = #PB_OS_Windows
 CompilerIf #PB_Compiler_IsMainFile
   
   UsePNGImageDecoder()
+  
+  Procedure Smile() 
     
-  Procedure TestSVGtoPNG(svg.s,topng.s, width.f = -1, height.f = -1)
+    width = 150;
+    height = 150;
+    
+    center_x.f = width / 2.0
+    center_y.f = height / 2.0
+    face_radius.f = 70
+    mouth_radius.f = 50
+    eye_radius.f = 10
+    eye_offset_x.f = 25
+    eye_offset_y.f = 20
+    eye_x.f = center_x - eye_offset_x
+    eye_y.f = center_y - eye_offset_y
+    
+    surface = plutovg_surface_create(width, height)
+    canvas = plutovg_canvas_create(surface)
+    
+    plutovg_canvas_save(canvas);
+    plutovg_canvas_arc(canvas, center_x, center_y, face_radius, 0, #PLUTOVG_TWO_PI, 0)
+    plutovg_canvas_set_rgb(canvas, 1, 1, 0)
+    plutovg_canvas_fill_preserve(canvas)
+    plutovg_canvas_set_rgb(canvas, 0, 0, 0)
+    plutovg_canvas_set_line_width(canvas, 5)
+    plutovg_canvas_stroke(canvas)
+    plutovg_canvas_restore(canvas)
+    
+    plutovg_canvas_save(canvas)
+    plutovg_canvas_arc(canvas, eye_x, eye_y, eye_radius, 0, #PLUTOVG_TWO_PI, 0)
+    plutovg_canvas_arc(canvas, center_x + eye_offset_x, eye_y, eye_radius, 0, #PLUTOVG_TWO_PI, 0)
+    plutovg_canvas_set_rgb(canvas, 0, 0, 0)
+    plutovg_canvas_fill(canvas)
+    plutovg_canvas_restore(canvas)
+    
+    plutovg_canvas_save(canvas)
+    plutovg_canvas_arc(canvas, center_x, center_y, mouth_radius, 0, #PLUTOVG_PI, 0)
+    plutovg_canvas_set_rgb(canvas, 0, 0, 0)
+    plutovg_canvas_set_line_width(canvas, 5)
+    plutovg_canvas_stroke(canvas)
+    plutovg_canvas_restore(canvas)
+    
+    img = plutovg_surface_write_to_img(surface,#PB_Any) 
+    If img 
+      OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"test") 
+      ImageGadget(0,0,0,ImageWidth(img),ImageHeight(img),ImageID(img)) 
+      Repeat 
+      Until WaitWindowEvent() = #PB_Event_CloseWindow 
+    EndIf 
+    plutovg_canvas_destroy(canvas)
+    plutovg_surface_destroy(surface)
+       
+    
+  EndProcedure   
+  
+  
+  Procedure TestSVGtoImgandPNG(svg.s,topng.s, width.f = -1, height.f = -1)
     Protected document.i
     Protected surface.i 
     
@@ -525,9 +580,11 @@ CompilerIf #PB_Compiler_IsMainFile
   Debug "Version Code: " + Str(plutosvg_version())
   
   Global svg.s = GetPathPart(ProgramFilename()) + "camera.svg" 
-  Global topng.s =  GetPathPart(ProgramFilename()) + "mycamera.png"
+  Global topng.s = GetPathPart(ProgramFilename()) + "mycamera.png"
   
-  If TestSVGtoPNG(svg.s,topng.s)
+  smile() ;draw smile to image and open window
+    
+  If TestSVGtoImgandPNG(svg.s,topng.s)
     
     cam = LoadImage(-1,topng)
     If cam  
