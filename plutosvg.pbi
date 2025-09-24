@@ -533,11 +533,9 @@ CompilerIf #PB_Compiler_IsMainFile
     Protected text.s = "Smile PB" 
     
     If plutovg_canvas_add_font_file(canvas, "Arial",1,0,font,0)
-      Debug "ok" 
+      
       plutovg_canvas_select_font_face(canvas,"Arial",1,0) 
-      
       Protected rect.plutovg_rect 
-      
       plutovg_canvas_save(canvas)   
       plutovg_canvas_set_rgb(canvas, 0, 0, 1)
       plutovg_canvas_set_font_size(canvas,24)
@@ -546,10 +544,7 @@ CompilerIf #PB_Compiler_IsMainFile
       plutovg_canvas_restore(canvas)
       
     EndIf   
-    
-    Protected sufdata.s = PeekS(plutovg_surface_get_data(surface),-1,#PB_Unicode)  
-    Debug sufdata 
-    
+        
     Protected img = plutovg_surface_write_to_img(surface,#PB_Any) 
     If img 
       OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"vector test",#PB_Window_SystemMenu | #PB_Window_ScreenCentered) 
