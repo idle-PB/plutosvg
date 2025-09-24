@@ -1,4 +1,5 @@
 ﻿; PlutoSVG PureBasic Header
+; Author idle 
 ; Ported from plutosvg.h
 ; Copyright (c) 2020-2025 Samuel Ugochukwu <sammycageagle@gmail.com>
 ; 
@@ -158,34 +159,34 @@ Prototype.i plutosvg_palette_func_t(*closure, *name, length.i, *color.plutovg_co
 
 ImportC "libplutosvg.a" 
   
-  ; Version functions
+  ;-Version functions
   plutosvg_version.i()
   plutosvg_version_string()
   
-  ; Document loading functions
+  ;-Document loading functions
   plutosvg_document_load_from_data(*data, length.i, width.f, height.f, destroy_func.plutovg_destroy_func_t, *closure)
   plutosvg_document_load_from_file(filename.p-utf8, width.f, height.f)
   
-  ; Document rendering functions
+  ;-Document rendering functions
   plutosvg_document_render.i(*document, id, canvas, *current_color.plutovg_color, palette_func.plutosvg_palette_func_t, *closure)
   plutosvg_document_render_to_surface.i(document, id, width.i, height.i, *current_color.plutovg_color, palette_func.plutosvg_palette_func_t, *closure)
   
-  ; Document property functions
+  ;-Document property functions
   plutosvg_document_get_width.f(*document)
   plutosvg_document_get_height.f(*document)
   plutosvg_document_extents.i(*document, *id, *extents.plutovg_rect)
   
-  ; Document cleanup
+  ;-Document cleanup
   plutosvg_document_destroy(*document)
   
-  ; FreeType integration
+  ;-FreeType integration
   plutosvg_ft_svg_hooks.i()
   
-  ; Version functions
+  ;-Version functions
   plutovg_version()
   plutovg_version_string()
   
-  ; Matrix functions
+  ;-Matrix functions
   plutovg_matrix_init(*matrix.plutovg_matrix, a.f, b.f, c.f, d.f, e.f, f.f)
   plutovg_matrix_init_identity(*matrix.plutovg_matrix)
   plutovg_matrix_init_translate(*matrix.plutovg_matrix, tx.f, ty.f)
@@ -204,7 +205,7 @@ ImportC "libplutosvg.a"
   plutovg_matrix_map_rect(*matrix.plutovg_matrix, *src.plutovg_rect, *dst.plutovg_rect)
   plutovg_matrix_parse.b(*matrix.plutovg_matrix,*pdata, length.l)
   
-  ; Path functions
+  ;-Path functions
   plutovg_path_create()
   plutovg_path_reference(*path)
   plutovg_path_destroy(*path)
@@ -236,17 +237,17 @@ ImportC "libplutosvg.a"
   plutovg_path_length.f(*path)
   plutovg_path_parse.b(*path, *pData, length.l)
   
-  ; Path iterator functions
+  ;-Path iterator functions
   plutovg_path_iterator_init(*it.plutovg_path_iterator, *path)
   plutovg_path_iterator_has_next.b(*it.plutovg_path_iterator)
   plutovg_path_iterator_next.l(*it.plutovg_path_iterator, *points.plutovg_point)
   
-  ; Text iterator functions
+  ;-Text iterator functions
   plutovg_text_iterator_init(*it.plutovg_text_iterator, *text, length.l, encoding.l)
   plutovg_text_iterator_has_next.b(*it.plutovg_text_iterator)
   plutovg_text_iterator_next.l(*it.plutovg_text_iterator)
   
-  ; Font face functions
+  ;-Font face functions
   plutovg_font_face_load_from_file(filename.p-utf8, ttcindex.l)
   plutovg_font_face_load_from_data(*data, length.l, ttcindex.l, *destroy_func, *closure)
   plutovg_font_face_reference(*face)
@@ -258,7 +259,7 @@ ImportC "libplutosvg.a"
   plutovg_font_face_traverse_glyph_path.f(*face, size.f, x.f, y.f, codepoint.l, *traverse_func, *closure)
   plutovg_font_face_text_extents.f(*face, size.f, *text, length.l, encoding.l, *extents.plutovg_rect)
   
-  ; Font face cache functions
+  ;-Font face cache functions
   plutovg_font_face_cache_create()
   plutovg_font_face_cache_reference(*cache)
   plutovg_font_face_cache_destroy(*cache)
@@ -271,7 +272,7 @@ ImportC "libplutosvg.a"
   plutovg_font_face_cache_load_dir.l(*cache, dirname.p-ascii)
   plutovg_font_face_cache_load_sys.l(*cache)
   
-  ; Color functions
+  ;-Color functions
   plutovg_color_init_rgb(*color.plutovg_color, r.f, g.f, b.f)
   plutovg_color_init_rgba(*color.plutovg_color, r.f, g.f, b.f, a.f)
   plutovg_color_init_rgb8(*color.plutovg_color, r.l, g.l, b.l)
@@ -284,7 +285,7 @@ ImportC "libplutosvg.a"
   plutovg_color_to_argb32.l(*color.plutovg_color)
   plutovg_color_parse.l(*color.plutovg_color, *pData, length.l)
   
-  ; Surface functions
+  ;-Surface functions
   plutovg_surface_create(width.l, height.l)
   plutovg_surface_create_for_data(*data.Byte, width.l, height.l, stride.l)
   plutovg_surface_load_from_image_file(filename.p-ascii)
@@ -303,11 +304,11 @@ ImportC "libplutosvg.a"
   plutovg_surface_write_to_png_stream.b(*surface, *write_func, *closure)
   plutovg_surface_write_to_jpg_stream.b(*surface, *write_func, *closure, quality.l)
   
-  ; Pixel format conversion functions
+  ;-Pixel format conversion functions
   plutovg_convert_argb_to_rgba(*dst.Byte, *src.Byte, width.l, height.l, stride.l)
   plutovg_convert_rgba_to_argb(*dst.Byte, *src.Byte, width.l, height.l, stride.l)
   
-  ; Paint functions
+  ;-Paint functions
   plutovg_paint_create_rgb(r.f, g.f, b.f)
   plutovg_paint_create_rgba(r.f, g.f, b.f, a.f)
   plutovg_paint_create_color(*color.plutovg_color)
@@ -318,7 +319,7 @@ ImportC "libplutosvg.a"
   plutovg_paint_destroy(*paint)
   plutovg_paint_get_reference_count.l(*paint)
   
-  ; Canvas functions
+  ;-Canvas functions
   plutovg_canvas_create(*surface)
   plutovg_canvas_reference(*canvas)
   plutovg_canvas_destroy(*canvas)
@@ -327,7 +328,7 @@ ImportC "libplutosvg.a"
   plutovg_canvas_save(*canvas)
   plutovg_canvas_restore(*canvas)
   
-  ; Canvas paint settings
+  ;-Canvas paint settings
   plutovg_canvas_set_rgb(*canvas, r.f, g.f, b.f)
   plutovg_canvas_set_rgba(*canvas, r.f, g.f, b.f, a.f)
   plutovg_canvas_set_color(*canvas, *color.plutovg_color)
@@ -337,7 +338,7 @@ ImportC "libplutosvg.a"
   plutovg_canvas_set_paint(*canvas, *paint)
   plutovg_canvas_get_paint(*canvas, *color.plutovg_color)
   
-  ; Canvas font settings
+  ;-Canvas font settings
   plutovg_canvas_set_font_face_cache(*canvas, *cache)
   plutovg_canvas_get_font_face_cache(*canvas)
   plutovg_canvas_add_font_face(*canvas, family.p-ascii, bold.b, italic.b, *face)
@@ -349,7 +350,7 @@ ImportC "libplutosvg.a"
   plutovg_canvas_set_font_size(*canvas, size.f)
   plutovg_canvas_get_font_size.f(*canvas)
   
-  ; Canvas state settings
+  ;-Canvas state settings
   plutovg_canvas_set_fill_rule(*canvas, winding.l)
   plutovg_canvas_get_fill_rule.l(*canvas)
   plutovg_canvas_set_operator(*canvas, op.l)
@@ -370,7 +371,7 @@ ImportC "libplutosvg.a"
   plutovg_canvas_set_dash_array(*canvas, *dashes.Float, ndashes.l)
   plutovg_canvas_get_dash_array.l(*canvas, *dashes)
   
-  ; Canvas transformation functions
+  ;-Canvas transformation functions
   plutovg_canvas_translate(*canvas, tx.f, ty.f)
   plutovg_canvas_scale(*canvas, sx.f, sy.f)
   plutovg_canvas_shear(*canvas, shx.f, shy.f)
@@ -383,7 +384,7 @@ ImportC "libplutosvg.a"
   plutovg_canvas_map_point(*canvas, *src.plutovg_point, *dst.plutovg_point)
   plutovg_canvas_map_rect(*canvas, *src.plutovg_rect, *dst.plutovg_rect)
   
-  ; Canvas path construction functions
+  ;-Canvas path construction functions
   plutovg_canvas_move_to(*canvas, x.f, y.f)
   plutovg_canvas_line_to(*canvas, x.f, y.f)
   plutovg_canvas_quad_to(*canvas, x1.f, y1.f, x2.f, y2.f)
@@ -400,17 +401,17 @@ ImportC "libplutosvg.a"
   plutovg_canvas_get_current_point(*canvas, *x.Float, *y.Float)
   plutovg_canvas_get_path(*canvas)
   
-  ; Canvas hit testing functions
+  ;-Canvas hit testing functions
   plutovg_canvas_fill_contains.b(*canvas, x.f, y.f)
   plutovg_canvas_stroke_contains.b(*canvas, x.f, y.f)
   plutovg_canvas_clip_contains.b(*canvas, x.f, y.f)
   
-  ; Canvas extent functions
+  ;-Canvas extent functions
   plutovg_canvas_fill_extents(*canvas, *extents.plutovg_rect)
   plutovg_canvas_stroke_extents(*canvas, *extents.plutovg_rect)
   plutovg_canvas_clip_extents(*canvas, *extents.plutovg_rect)
   
-  ; Canvas drawing operations
+  ;-Canvas drawing operations
   plutovg_canvas_fill(*canvas)
   plutovg_canvas_stroke(*canvas)
   plutovg_canvas_clip(*canvas)
@@ -419,7 +420,7 @@ ImportC "libplutosvg.a"
   plutovg_canvas_stroke_preserve(*canvas)
   plutovg_canvas_clip_preserve(*canvas)
   
-  ; Canvas shape drawing functions
+  ;-Canvas shape drawing functions
   plutovg_canvas_fill_rect(*canvas, x.f, y.f, w.f, h.f)
   plutovg_canvas_fill_path(*canvas, *path)
   plutovg_canvas_stroke_rect(*canvas, x.f, y.f, w.f, h.f)
@@ -427,14 +428,14 @@ ImportC "libplutosvg.a"
   plutovg_canvas_clip_rect(*canvas, x.f, y.f, w.f, h.f)
   plutovg_canvas_clip_path(*canvas, *path)
   
-  ; Canvas text functions
+  ;-Canvas text functions
   plutovg_canvas_add_glyph.f(*canvas, codepoint.l, x.f, y.f)
   plutovg_canvas_add_text.f(*canvas, *text, length.l, encoding.l, x.f, y.f)
   plutovg_canvas_fill_text.f(*canvas, *text, length.l, encoding.l, x.f, y.f)
   plutovg_canvas_stroke_text.f(*canvas, *text, length.l, encoding.l, x.f, y.f)
   plutovg_canvas_clip_text.f(*canvas, *text, length.l, encoding.l, x.f, y.f)
   
-  ; Canvas text metrics functions
+  ;-Canvas text metrics functions
   plutovg_canvas_font_metrics(*canvas, *ascent.Float, *descent.Float, *line_gap.Float, *extents.plutovg_rect)
   plutovg_canvas_glyph_metrics(*canvas, codepoint.l, *advance_width.Float, *left_side_bearing.Float, *extents.plutovg_rect)
   plutovg_canvas_text_extents.f(*canvas, *text, length.l, encoding.l, *extents.plutovg_rect)
