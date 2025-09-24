@@ -159,13 +159,13 @@ Prototype.i plutosvg_palette_func_t(*closure, *name, length.i, *color.plutovg_co
 
 ImportC "libplutosvg.a" 
   
-  ;-Version functions
+  ;-Pluto svg Version functions
   plutosvg_version.i()
   plutosvg_version_string()
   
   ;-Document loading functions
   plutosvg_document_load_from_data(*data, length.i, width.f, height.f, destroy_func.plutovg_destroy_func_t, *closure)
-  plutosvg_document_load_from_file(filename.p-utf8, width.f, height.f)
+  plutosvg_document_load_from_file(filename.p-utf8, width.f=-1, height.f=-1)
   
   ;-Document rendering functions
   plutosvg_document_render.i(*document, id, canvas, *current_color.plutovg_color, palette_func.plutosvg_palette_func_t, *closure)
@@ -182,7 +182,7 @@ ImportC "libplutosvg.a"
   ;-FreeType integration
   plutosvg_ft_svg_hooks.i()
   
-  ;-Version functions
+  ;-Pluto vg Version functions
   plutovg_version()
   plutovg_version_string()
   
@@ -443,6 +443,46 @@ ImportC "libplutosvg.a"
   
 EndImport
 
+CompilerIf #PB_Compiler_OS = #PB_OS_Windows 
+    
+    Procedure CopyMemoryToImage(Memory, ImageNumber)
+      
+      Protected TemporaryDC, TemporaryBitmap.BITMAP, TemporaryBitmapInfo.BITMAPINFO
+      
+      TemporaryDC = CreateDC_("DISPLAY", #Null, #Null, #Null)
+      
+      GetObject_(ImageID(ImageNumber), SizeOf(BITMAP), TemporaryBitmap.BITMAP)
+      
+      TemporaryBitmapInfo\bmiHeader\biSize        = SizeOf(BITMAPINFOHEADER)
+      TemporaryBitmapInfo\bmiHeader\biWidth       = TemporaryBitmap\bmWidth
+      TemporaryBitmapInfo\bmiHeader\biHeight      = -TemporaryBitmap\bmHeight
+      TemporaryBitmapInfo\bmiHeader\biPlanes      = 1
+      TemporaryBitmapInfo\bmiHeader\biBitCount    = 32
+      TemporaryBitmapInfo\bmiHeader\biCompression = #BI_RGB
+      
+      SetDIBits_(TemporaryDC, ImageID(ImageNumber), 0, TemporaryBitmap\bmHeight, Memory, TemporaryBitmapInfo, #DIB_RGB_COLORS)
+      
+      DeleteDC_(TemporaryDC)
+      
+    EndProcedure
+    
+    Procedure plutovg_surface_write_to_img(*surface, imageNumber) 
+      
+      *mem = plutovg_surface_get_data(*surface)
+      w = plutovg_surface_get_width(*surface)
+      h = plutovg_surface_get_height(*surface)
+      st = plutovg_surface_get_stride(*surface)
+      Debug st           
+      img = CreateImage(imageNumber,w,h,32) 
+      CopyMemoryToImage(*mem,img)
+      
+      ProcedureReturn img 
+      
+    EndProcedure   
+        
+  CompilerEndIf 
+  
+ 
 CompilerIf #PB_Compiler_IsMainFile
   
   UsePNGImageDecoder()
@@ -459,6 +499,15 @@ CompilerIf #PB_Compiler_IsMainFile
       
       surface = plutosvg_document_render_to_surface(document,0, -1, -1, #Null, #Null, #Null);
       If surface 
+        
+        img = plutovg_surface_write_to_img(surface,#PB_Any) 
+        If img 
+          OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"test") 
+          ImageGadget(0,0,0,ImageWidth(img),ImageHeight(img),ImageID(img)) 
+          Repeat 
+          Until WaitWindowEvent() = #PB_Event_CloseWindow 
+        EndIf 
+                
         plutovg_surface_write_to_png(surface, topng) 
         plutovg_surface_destroy(surface)
         plutosvg_document_destroy(document)
