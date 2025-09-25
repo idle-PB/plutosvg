@@ -469,12 +469,12 @@ CompilerIf #PB_Compiler_OS = #PB_OS_Windows
     
     Procedure plutovg_surface_write_to_img(*surface, imageNumber) 
       
-      *mem = plutovg_surface_get_data(*surface)
-      w = plutovg_surface_get_width(*surface)
-      h = plutovg_surface_get_height(*surface)
-      st = plutovg_surface_get_stride(*surface)
-      Debug st           
-      img = CreateImage(imageNumber,w,h,32) 
+      Protected *mem = plutovg_surface_get_data(*surface)
+      Protected w = plutovg_surface_get_width(*surface)
+      Protected h = plutovg_surface_get_height(*surface)
+      Protected st = plutovg_surface_get_stride(*surface)
+               
+      Protected img = CreateImage(imageNumber,w,h,32) 
       CopyMemoryToImage(*mem,img)
       
       ProcedureReturn img 
@@ -488,74 +488,122 @@ CompilerIf #PB_Compiler_IsMainFile
   
   UsePNGImageDecoder()
   
-  Procedure Smile() 
+  Global canvas,surface
+  
+  Procedure DrawSmile(width,height) 
+       
+    Static lw,lh,bfont  
     
-    Protected width = 150;
-    Protected height = 150;
-    
-    Protected center_x.f = width / 2.0
-    Protected center_y.f = height / 2.0
-    Protected face_radius.f = 70
-    Protected mouth_radius.f = 50
-    Protected eye_radius.f = 10
-    Protected eye_offset_x.f = 25
-    Protected eye_offset_y.f = 20
-    Protected eye_x.f = center_x - eye_offset_x
-    Protected eye_y.f = center_y - eye_offset_y
-    
-    Protected surface = plutovg_surface_create(width, height)
-    Protected canvas = plutovg_canvas_create(surface)
-    
-    plutovg_canvas_save(canvas);
-    plutovg_canvas_arc(canvas, center_x, center_y, face_radius, 0, #PLUTOVG_TWO_PI, 0)
-    plutovg_canvas_set_rgb(canvas, 1, 1, 0)
-    plutovg_canvas_fill_preserve(canvas)
-    plutovg_canvas_set_rgb(canvas, 0, 0, 0)
-    plutovg_canvas_set_line_width(canvas, 5)
-    plutovg_canvas_stroke(canvas)
-    plutovg_canvas_restore(canvas)
-    
-    plutovg_canvas_save(canvas)
-    plutovg_canvas_arc(canvas, eye_x, eye_y, eye_radius, 0, #PLUTOVG_TWO_PI, 0)
-    plutovg_canvas_arc(canvas, center_x + eye_offset_x, eye_y, eye_radius, 0, #PLUTOVG_TWO_PI, 0)
-    plutovg_canvas_set_rgb(canvas, 0, 0, 0)
-    plutovg_canvas_fill(canvas)
-    plutovg_canvas_restore(canvas)
-    
-    plutovg_canvas_save(canvas)
-    plutovg_canvas_arc(canvas, center_x, center_y, mouth_radius, 0, #PLUTOVG_PI, 0)
-    plutovg_canvas_set_rgb(canvas, 0, 0, 0)
-    plutovg_canvas_set_line_width(canvas, 5)
-    plutovg_canvas_stroke(canvas)
-    plutovg_canvas_restore(canvas)
-    
-    Protected font.s = "C:\Windows\fonts\Arial.ttf"
-    Protected text.s = "Smile PB" 
-    
-    If plutovg_canvas_add_font_file(canvas, "Arial",1,0,font,0)
+    If (lw <> width And lh <> height) 
+      
+      Protected sfx.f = 1.0
+      Protected sfy.f = 1.0
+      
+      Protected sfxy.f = 1.0 
+      If lw = 0 
+        lw = width
+      EndIf 
+      If lh = 0 
+        lh = height 
+      EndIf 
+      If (lw <> 0 And lh <> 0) 
+        sfx = width / lw 
+        sfy = height / lh 
+        sfxy = Sqr(sfx*sfy) 
+      EndIf 
+            
+      Protected center_x.f = width / 2.0
+      Protected center_y.f = height / 2.0
+      Protected face_radius.f = 70 * sfxy
+      Protected mouth_radius.f = 50 * sfxy
+      Protected eye_radius.f = 10 *sfxy
+      Protected eye_offset_x.f = 25 *sfxy
+      Protected eye_offset_y.f = 20 * sfxy
+      Protected eye_x.f = (center_x - eye_offset_x)
+      Protected eye_y.f = (center_y - eye_offset_y)
+            
+      If canvas  
+        plutovg_canvas_destroy(canvas)
+      EndIf 
+      If surface 
+        plutovg_surface_destroy(surface)
+      EndIf 
+      
+      Protected font.s = "C:\Windows\fonts\Arial.ttf"
+      Protected text.s = "Smiley PB" 
+      
+      surface = plutovg_surface_create(width,height)
+      canvas = plutovg_canvas_create(surface)
+      
+      bfont = plutovg_canvas_add_font_file(canvas, "Arial",1,0,font,0)
+      
+      plutovg_canvas_save(canvas);
+      
+      plutovg_canvas_arc(canvas, center_x, center_y, face_radius, 0, #PLUTOVG_TWO_PI, 0)
+      plutovg_canvas_set_rgb(canvas, 1, 1, 0)
+      plutovg_canvas_fill_preserve(canvas)
+      plutovg_canvas_set_rgb(canvas, 0, 0, 0)
+      plutovg_canvas_set_line_width(canvas, 5)
+      plutovg_canvas_stroke(canvas)
+      plutovg_canvas_restore(canvas)
+      
+      plutovg_canvas_save(canvas)
+      plutovg_canvas_arc(canvas, eye_x, eye_y, eye_radius, 0, #PLUTOVG_TWO_PI, 0)
+      plutovg_canvas_arc(canvas, center_x + eye_offset_x, eye_y, eye_radius, 0, #PLUTOVG_TWO_PI, 0)
+      plutovg_canvas_set_rgb(canvas, 0, 0, 0)
+      plutovg_canvas_fill(canvas)
+      plutovg_canvas_restore(canvas)
+      
+      plutovg_canvas_save(canvas)
+      plutovg_canvas_arc(canvas, center_x, center_y, mouth_radius, 0, #PLUTOVG_PI, 0)
+      plutovg_canvas_set_rgb(canvas, 0, 0, 0)
+      plutovg_canvas_set_line_width(canvas, 5)
+      plutovg_canvas_stroke(canvas)
+      plutovg_canvas_restore(canvas)
+      
       
       plutovg_canvas_select_font_face(canvas,"Arial",1,0) 
       Protected rect.plutovg_rect 
       plutovg_canvas_save(canvas)   
       plutovg_canvas_set_rgb(canvas, 0, 0, 1)
-      plutovg_canvas_set_font_size(canvas,24)
+      plutovg_canvas_set_font_size(canvas,24*sfxy)
       plutovg_canvas_text_extents(canvas,@text,-1,#PLUTOVG_TEXT_ENCODING_UTF16,@rect)
       Plutovg_canvas_stroke_text(canvas,text,-1,#PLUTOVG_TEXT_ENCODING_UTF16, center_x-(rect\w*0.5),rect\h*2.0)
+      plutovg_canvas_set_rgb(canvas, 0, 1, 0)
+      Plutovg_canvas_fill_text(canvas,text,-1,#PLUTOVG_TEXT_ENCODING_UTF16, center_x-(rect\w*0.5),rect\h*2.0)
       plutovg_canvas_restore(canvas)
       
-    EndIf   
+    EndIf    
+    
+    ProcedureReturn surface  
+    
+  EndProcedure    
+  
+  Procedure Smile() 
         
-    Protected img = plutovg_surface_write_to_img(surface,#PB_Any) 
+    Protected img = plutovg_surface_write_to_img(DrawSmile(150,150),#PB_Any) 
     If img 
-      OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"vector test",#PB_Window_SystemMenu | #PB_Window_ScreenCentered) 
+      OpenWindow(0,0,0,ImageWidth(img),ImageHeight(img),"vector test",#PB_Window_SystemMenu | #PB_Window_ScreenCentered | #PB_Window_SizeGadget) 
       ImageGadget(0,0,0,ImageWidth(img),ImageHeight(img),ImageID(img)) 
-      Repeat 
-      Until WaitWindowEvent() = #PB_Event_CloseWindow 
+      Repeat
+      Event = WaitWindowEvent()
+      Select event 
+        Case #PB_Event_SizeWindow 
+          If Img 
+            FreeImage(img)
+          EndIf   
+          ResizeWindow(0,#PB_Ignore,#PB_Ignore,WindowWidth(0),WindowWidth(0))
+          img = plutovg_surface_write_to_img(DrawSmile(WindowWidth(0),WindowWidth(0)),#PB_Any)
+          SetGadgetState(0,ImageID(img)) 
+          
+        Case  #PB_Event_CloseWindow
+          Break 
+      EndSelect
+    ForEver   
     EndIf 
     plutovg_canvas_destroy(canvas)
     plutovg_surface_destroy(surface)
-       
-    
+         
   EndProcedure   
   
   
@@ -569,7 +617,7 @@ CompilerIf #PB_Compiler_IsMainFile
       Debug "Width: " + StrF(plutosvg_document_get_width(document))
       Debug "Height: " + StrF(plutosvg_document_get_height(document))
       
-      surface = plutosvg_document_render_to_surface(document,0, -1, -1, #Null, #Null, #Null);
+      surface = plutosvg_document_render_to_surface(document,0, width, height, #Null, #Null, #Null);
       If surface 
         
         img = plutovg_surface_write_to_img(surface,#PB_Any) 
@@ -599,9 +647,9 @@ CompilerIf #PB_Compiler_IsMainFile
   Global svg.s = GetPathPart(ProgramFilename()) + "tiger.svg" 
   Global topng.s = GetPathPart(ProgramFilename()) + "tiger.png"
   
-  smile() ;draw smile to image and open window
+  smile() ;draw smile to image and open window scales with resize  
     
-  If TestSVGtoImgandPNG(svg.s,topng.s)
+  If TestSVGtoImgandPNG(svg.s,topng.s,-1,-1)  ;open tiger svg and save to pdf 
     
     cam = LoadImage(-1,topng)
     If cam  
@@ -614,5 +662,31 @@ CompilerIf #PB_Compiler_IsMainFile
     EndIf   
     
   EndIf 
+  
+  If StartVectorDrawing(SvgVectorOutput("test.svg", 400, 200))  ;use pb commands to write svg 
+
+    AddPathBox(50, 50, 200, 50)
+    AddPathBox(150, 75, 200, 50)
+    VectorSourceColor(RGBA(255, 0, 0, 255))
+    StrokePath(10)
+  
+    StopVectorDrawing()
+  EndIf
+  
+  If TestSVGtoImgandPNG("test.svg",topng.s,-1,-1) ;open and save svg to png 
+    
+    cam = LoadImage(-1,topng)
+    If cam  
+      OpenWindow(0,0,0,ImageWidth(cam),ImageHeight(cam),"SVG to PNG",#PB_Window_SystemMenu | #PB_Window_ScreenCentered) 
+      ImageGadget(0,0,0,ImageWidth(cam),ImageHeight(cam),ImageID(cam)) 
+      Repeat 
+      Until WaitWindowEvent() = #PB_Event_CloseWindow 
+    Else 
+      MessageRequester("oops","cant find image")
+    EndIf   
+    
+  EndIf 
+  
+  
   
 CompilerEndIf
